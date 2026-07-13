@@ -1,0 +1,38 @@
+# Local development database. Start it with:  docker compose up -d
+# The app itself runs with `npm run dev` on the host by default.
+#
+# To run the full stack (app + db) in containers, uncomment the `app` service.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mini_saas_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mini_saas
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mini_saas"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # app:
+  #   build: .
+  #   container_name: mini_saas_app
+  #   restart: unless-stopped
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   environment:
+  #     DATABASE_URL: "postgresql://postgres:postgres@db:5432/mini_saas?schema=public"
+  #     JWT_SECRET: "change-me-in-production"
+  #   ports:
+  #     - "3000:3000"
+
+volumes:
+  db_data:
