@@ -1,0 +1,45 @@
+// Prisma schema for the Mini SaaS Dashboard.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Status a project can be in. Kept as an enum so the DB enforces valid values
+// and the API/UI can rely on a fixed, filterable set.
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+}
+
+// Application user. Auth is JWT based; only the password hash is stored.
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String // bcrypt hash, never the plaintext
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// A project row shown in the dashboard table.
+model Project {
+  id             String        @id @default(cuid())
+  name           String
+  status         ProjectStatus @default(ACTIVE)
+  deadline       DateTime
+  assignedTo     String // name of the assigned team member
+  budget         Int // stored in whole currency units (e.g. USD)
+  description    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([assignedTo])
+}
