@@ -9,6 +9,17 @@ Each project has a **status**, **deadline**, **assigned team member** and **budg
 
 ---
 
+## Live demo
+
+**https://minisaas.cabscloud.com**
+
+Sign in with the seeded demo account:
+
+| | |
+| --- | --- |
+| Email | `admin@example.com` |
+| Password | `admin123` |
+
 ## Features
 
 - **Responsive table view** of projects (name, status, assignee, deadline, budget).
